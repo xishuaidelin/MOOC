@@ -1,0 +1,358 @@
+ \documentclass[10pt]{article}
+
+\usepackage{amsmath,amsthm,amsfonts}
+\usepackage{graphicx}
+\usepackage{enumerate}
+\usepackage{xcolor}
+\usepackage{ulem}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{claim}{Claim}
+\newtheorem{lemma}{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+
+\newcommand{\handout}[6]{
+   \renewcommand{\thepage}{#1-\arabic{page}}
+   \noindent
+   \begin{center}
+      \vbox{
+    \hbox to \textwidth { #6 \hfill #2 }
+       \vspace{4mm}
+       \hbox to \textwidth { {\Large \hfill #5  \hfill} }
+       \vspace{2mm}
+       \hbox to \textwidth { { #3 \hfill #4} }
+      }
+   \hrulefill
+   \end{center}
+   \vspace*{4mm}
+}
+
+
+\setlength{\textheight}{8.5in}
+\setlength{\evensidemargin}{0.0in}
+\setlength{\oddsidemargin}{0.0in}
+\setlength{\topmargin}{-0.5in}
+\setlength{\textwidth}{6.5in}
+
+
+\newcommand{\emphdef}[1]{\textbf{#1}}
+\newcommand{\E}{\mathbb{E}}
+\renewcommand{\Pr}{\mathbb{P}}
+
+\newcommand{\blue}{\color{blue}}
+
+\begin{document}
+
+\handout{Chernoff}{\today}{Editor: YOUR NAME HERE}{Lecturer: Michel Goemans, Lorenzo Orecchia}{Chernoff bounds, and some applications}{{\bf 18.310 lecture notes}}
+
+{\bf Instructions:}
+{\blue If you would like to add text, please write it in blue, and
+  this can be done with the command  
+\begin{verbatim}
+{\blue your text}.
+\end{verbatim}
+}
+If you want to delete some of the text, please \sout{strike it out} using 
+\begin{verbatim}
+\sout{strike it out}
+\end{verbatim}
+
+If you want to move existing text, strike it out in its original
+position and make it blue in its final destination. 
+
+Do not forget to add your name above.
+
+\section{Preliminaries}
+
+Before we venture into Chernoff bound, let us recall two simple bounds
+on the probability that a random variable deviates from the mean by a
+certain amount:
+Markov's inequality and Chebyshev's inequality.
+
+Markov's inequality only applies to non-negative random variables and
+gives us a bound depending on the expectation of the random variable.
+\begin{theorem} [Markov's Inequality] \label{thm:markov}
+Let $X: S \to \mathbb{R}$ be a non-negative random variable. Then, for any $a > 0,$
+$$
+\Pr(X > a) \leq \frac{\E(X)}{a}.
+$$
+\end{theorem} 
+\begin{proof}
+Let $A$ denote the event $\{X > a\}.$ Then:
+\begin{align*}
+\E(X) = \sum_{\omega \in S} \Pr(\omega) X(\omega) = \sum_{\omega
+  \in A} \Pr(\omega) X(\omega) + \sum_{\omega \in \bar{A}} \Pr(\omega)
+X(\omega).
+\end{align*}
+As $X$ is non-negative, we have $\sum_{\omega \in \bar{A}} \Pr(\omega)
+X(\omega) \geq 0.$ Hence:
+$$
+\E(X) \geq \sum_{\omega
+  \in A} \Pr(\omega) X(\omega) \geq a \sum_{\omega \in A} \Pr(\omega)
+= a \cdot \Pr(A). 
+$$
+\end{proof}
+
+
+Chebyshev's inequality requires the variance of the random variable
+and is normally stronger.
+\begin{theorem} [Chebyshev's Inequality] \label{thm:chebyshev}
+Let $X: S\to\mathbb{R}$ be a random variable with expectation
+$\E(X)$ and variance
+$\textrm{Var}(X).$ Then, for any $a \in \mathbb{R}$:
+$$
+\Pr(|X-\E(X)| > a) \leq \frac{\mathrm{Var}(X)}{a^2}.
+$$ 
+\end{theorem}
+\begin{proof}
+Apply Markov's Inequality to the non-negative random variable $(X-
+\E(X))^2.$ Notice that $$\E\left[(X - \E(X))^2\right] = \mathrm{Var}(X).$$
+\end{proof}
+
+Even though Markov's and Chebyshev's Inequality only use information
+about the expectation and the variance of the random variable under
+consideration, they are essentially tight for a general random
+variable. 
+
+{\bf Exercise} Verify this by constructing non-trivial
+(i.e. non-constant) random variables for which
+Theorem~\ref{thm:markov} and Theorem~\ref{thm:chebyshev} are tight,
+i.e. hold with equality.
+
+
+
+
+\section{Deviation of a sum on independent random variables}
+
+As we are not able to improve Markov's Inequality and Chebyshev's
+Inequality in general, it is worth to consider whether we can say
+something stronger for a more restricted, yet interesting, class of
+random variables. This idea brings us to consider the case of a random variable
+that is the sum of a number of independent random variables.
+
+This scenario is particularly important and ubiquitous in statistical applications. 
+Examples of such random variables are the number of heads in a sequence of coin tosses, or the average
+support obtained by a political candidate in a poll. 
+
+Can Markov's and Chebyshev's Inequality be improved for this particular kind of random variable?
+Before confronting this question, let us check what Chebyshev's
+Inequality (the stronger of the two)
+gives us for a sum of independent random variables.
+
+\begin{theorem} \label{thm:wl}
+Let $X_1, X_2, \ldots, X_n$ be independent random variables with
+$\E(X_i) = \mu_i$ and 
+$\mathrm{Var}(X_i) = \sigma_i^2.$  Then, for any $ a>0$:
+$$
+\Pr(|\sum_{i=1}^n X_i - \sum_{i=1}^n  \mu_i| > a) \leq \frac{\sum_{i=1}^n \sigma_i^2}{a^2}
+$$
+\end{theorem}
+\begin{proof}
+This follows from Chebyshev's Inequality applied to $\sum_{i=1}^n X_i$
+and the fact that $\mathrm{Var}(\sum_{i=1}^n X_i) = \sum_{i=1}^n
+\mathrm{Var}(X_i)$ for independent variables.
+\end{proof}
+
+In particular, for identically distributed random variables with expectation
+$\mu$ and
+variance $\sigma^2$, we obtain
+$$
+\Pr\left(\left|\frac{\sum_{i=1}^n X_i}{n} -  \mu\right| > b\right) \leq \frac{\sigma^2}{n b^2}
+$$ for any $b>0$. 
+We covered this derivation in the lecture on the Weak Law of Large
+Numbers. 
+
+Can this result be improved or is it tight? At a first glance, you may
+suspect that this is tight, as we have made use of all our
+assumptions. In particular, we exploited the independence of the
+variables $\{X_i\}$ to get $\mathrm{Var}(\sum_{i=1}^n X_i) = \sum_{i=1}^n
+\mathrm{Var}(X_i).$ Notice, however, that this last step actually \emph{only
+uses the pairwise independence } of the variables $\{X_i\}$,
+i.e. the fact that, for all couples $i \neq j \in [n]$ and all $x,y
+\in \mathbb{R}$:
+\begin{equation} \label{eq:indep}
+\Pr(X_i = x \wedge X_j = y) = \Pr(X_i = x) \cdot \Pr(X_j = y).
+\end{equation}
+Indeed, it is possible to show that Theorem~\ref{thm:wl} is tight when
+all the variables $\{X_i\}$ are just guaranteed to be pairwise
+independent.
+
+{\bf Hard Exercise} Let $X_1, \ldots, X_d$ be independent random variables
+that take value $1$ or $-1$, each with probability $1/2.$
+For each $S \subseteq [d]$, define the random variable  $Y_S =
+\prod_{i \in S} X_i$. i) Show that the variables $\{Y_S\}$ are pairwise
+independent. ii) Let $Z = \sum_{S \subseteq D} Y_S.$ Show that
+Chebyshev's Inequality is asymptotically tight for $Z.$
+
+We are now ready to tackle the case of a sum of independent random
+variables. Recall that we are now using the following strong version of
+independence (also known as joint or mutual independence), which
+guarantees the same property of Equation~\ref{eq:indep} for any subset $S
+\subseteq [n]$ of random variables:
+$$
+\forall S \subseteq [n], \; \Pr(\bigwedge_{i \in S} X_i = x_i) =
+\prod_{i \in S} \Pr(X_i = x_i).
+$$
+In this case, the proof of Theorem~\ref{thm:wl} is too weak as it does
+not rely on the joint independence. In the next section, we will see
+that we can indeed obtain \emph{stronger bounds} under this stronger
+assumpiton. 
+These bounds are known as Chernoff bounds, after Herman Chernoff, Emeritus Professor of
+Applied Mathematics here at MIT!
+
+\section{Chernoff Bound}
+
+There are many different forms of Chernoff bounds, each tuned to
+slightly different assumptions. We will start with the statement of
+the bound for the simple case of a sum of independent Bernoulli trials, i.e.~the case in which each random variable only takes the values 0 or 1. For example, this corresponds to the case of tossing unfair coins, each with its own probability of heads, and counting the total number of heads.   
+\begin{theorem}[Chernoff Bounds]\label{thm:chernoff}
+    Let $X = \sum_{i=1}^n X_i$, where $X_i = 1$ with probability $p_i$ and $X_i = 0$ with probability $1-p_i$, and all $X_i$ are independent.
+    Let $\mu = \E(X) = \sum_{i=1}^n p_i.$ Then
+    \begin{enumerate}[(i)]
+        \item {\bf Upper Tail:} $\displaystyle\Pr(X > (1 + \delta)\mu) \leq
+          e^{-\frac{\delta^2}{2 + \delta} \mu}$ for all $\delta > 0$;
+            \item {\bf Lower Tail:} $\displaystyle\Pr(X  < (1 - \delta)\mu) \leq e^{-\mu \delta^2/2}$ for all $0 < \delta < 1$;
+        \end{enumerate}
+\end{theorem}
+
+
+
+\subsection{Proof idea and moment generating function}
+
+
+Let $X$ be any random variable, and $a \in \mathbb{R}$.
+We will make use of the same idea which we used to prove Chebyshev's inequality from Markov's inequality.
+For any $s > 0$, 
+\begin{align}
+\Pr(X > a) &= \Pr(e^{sX} > e^{sa}) \notag\\
+           &\leq \frac{\E(e^{sX})}{e^{sa}} \qquad \text{by Markov's
+             inequality.} \label{eq:chernoff}
+\end{align}
+(Recall that to obtain Chebyshev, we squared both sides in the first step, here we exponentiate.)
+So we have some upper bound on $\Pr(X > a)$ in terms of $\E(e^{sX}).$
+Similarly, for any $s > 0,$ we have
+\begin{align*}
+\Pr(X < a) &= \Pr(e^{-sX} > e^{-sa}) \\
+           &\leq \frac{\E(e^{-sX})}{e^{-sa}} 
+\end{align*}
+
+The key player in this reasoning is the \emph{moment generating function} $M_X$ of the random variable $X$, which is a function from $\mathbb{R}$ to $\mathbb{R}$ defined by
+\[ M_X(s) = \E\left(e^{sX}\right). \]
+The reason for the name is related to the Taylor expansion of $e^{sX}$; assuming it converges, we have
+\[ M_X(s) = \E\left(1 + sX + \tfrac12s^2X^2 + \tfrac1{3!}s^3X^3 + \cdots\right) = \sum_{i=0}^\infty \frac{1}{i!}s^i \E(X^i). \]
+The terms $\E(X^i)$ are called ``moments'' and encode important information about the distribution; notice that the first moment ($i=1$) is just the expectation, and the second moment is closely related to the variance. 
+So the moment generating function encodes information of all of these moments in some way. 
+
+
+Moment generating functions behave wonderfully with respect to addition of independent random variables:
+\begin{lemma}\label{lem:mgf_add}
+    If $X = \sum_{i=1}^n X_i$ where $X_1, X_2, \ldots, X_n$ are independent random variables, then 
+    \[ M_X(s) = \prod_{i=1}^n M_{X_i}(s). \]
+\end{lemma}
+\begin{proof}
+    \begin{align*}
+        M_X(s) &= \E(e^{sX}) = \E\left(e^{s\sum_{i=1}^n X_i}\right)\\
+               &= \E\left(\prod_{i=1}^n e^{sX_i}\right)\\
+               &= \prod_{i=1}^n \E(e^{sX_i}) \qquad \text{ by independence}\\
+               &= \prod_{i=1}^n M_{X_i}(s).
+    \end{align*}
+\end{proof}
+This lemma allows us to prove a Chernoff bound by bounding the moment
+generating function of each $X_i$ individually. 
+
+\subsection{Proof of Theorem~\ref{thm:chernoff}}
+
+\begin{lemma} \label{lem:bernoulli_mgf}
+Let $Y$ be a random variable that takes value $1$ with probability $p$ and value $0$ with probability $1-p.$ Then, for all $s \in \mathbb{R}$:
+$$
+M_{Y}(s) = \E(e^{sY}) \leq e^{p(e^s-1)}.
+$$
+\end{lemma}
+\begin{proof}
+    We have:
+    \begin{align*}
+     M_{Y}(s) &= \E(e^{sY})\\
+                   &= p \cdot e^{s} + (1-p)\cdot 1 \qquad \text{by definition of expectation}\\
+                   &= 1 + p(e^s - 1)\\
+                   &\leq e^{p(e^s-1)} \qquad \text{using $1+y \leq e^y$ with $y=p(e^s-1)$}.\\
+    \end{align*}
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:chernoff}]
+Applying Lemma~\ref{lem:mgf_add} and Lemma~\ref{lem:bernoulli_mgf}, we obtain
+\begin{equation}\label{eq:main}
+ M_X(s) \leq \prod_{i=1}^n e^{p_i(e^s-1)} = e^{(e^s-1)\sum_{i=1}^n p_i} \leq e^{(e^s-1)\mu}, 
+\end{equation}
+    using that $\sum_{i=1}^n p_i = \E(X) = \mu$.
+
+    For the proof of the upper tail, we can now apply the strategy described in
+    Equation~\ref{eq:chernoff}, with $a= (1+\delta) \mu$ and choosing $s=\ln(1+\delta)$ (where $\delta$ is given in the statement of the theorem):
+    \begin{align*}
+        \Pr(X > (1+\delta)\mu) &\leq e^{-s(1+\delta)\mu}e^{(e^s-1)\mu)}\\
+        &= \left(\frac{e^{\delta}}{(1+\delta)^{1+\delta}}\right)^\mu.
+    \end{align*}
+Taking the natural logarithm of the right-hand side yields
+$$
+\mu (\delta - (1+\delta)\ln(1+\delta)).
+$$
+Using the following inequality for $x > 0$(left as an exercise):
+$$
+\ln (1+ x) \geq \frac{x}{1+x/2},
+$$
+we obtain
+$$
+\mu (\delta - (1+\delta)\ln(1+\delta)) \leq - \frac{\delta^2}{2+\delta} \mu.
+$$
+Hence, we have the desired bound for the upper tail:
+\begin{align*}
+        \Pr(X > (1+\delta)\mu) &\leq  \left(\frac{e^{\delta}}{(1+\delta)^{1+\delta}}\right)^\mu \leq e^{- \frac{\delta^2}{2+\delta} \mu}.
+    \end{align*}
+
+    The proof of the lower tail is entirely analogous. It proceeds by taking $s = \ln(1-\delta)$ and applies the following inequality for the logarithm of $(1 - \delta)$ in the range $0 < \delta < 1:$
+$$
+\ln(1-\delta) \geq -\delta + \frac{\delta^2}{2}.
+$$  
+Details are left as an exercise.
+\end{proof}
+
+\section{Other versions of Chernoff Bound}
+
+For $\delta \in (0,1)$, we can combine the lower and upper tails in Theorem~\ref{thm:chernoff} to obtain the following simple and useful bound:
+\begin{corollary}\label{cor:twosides}
+    With $X$ and $X_1, \ldots, X_n$ as before, and $\mu = \E(X)$, 
+    \[ \Pr(|X - \mu| > \delta\mu) \leq 2e^{-\mu \delta^2/3} \quad \text{for all } 0 < \delta < 1. \]
+\end{corollary}
+
+Chernoff bound can be applied to more general settings than that of Bernoulli variables. In particular, the following version of the bound applies to bounded random variables, regardless of their distribution! 
+\begin{theorem}
+Let $X_1, X_2, \ldots, X_n$ be random variables such that $a \leq X_i \leq b$ for all $i$. Let $X=\sum_{i=1}^n X_i$ and set $\mu = \E(X).$
+Then, for all $\delta > 0:$
+\begin{enumerate}[(i)]
+        \item {\bf Upper Tail:} $\displaystyle\Pr(X > (1 + \delta)\mu) <
+          e^{-\frac{2 \delta^2 \mu^2}{n (b-a)^2}}$;
+            \item {\bf Lower Tail:} $\displaystyle\Pr(X  < (1 - \delta)\mu) \leq e^{-\frac{\delta^2 \mu^2}{n (b-a)^2}}$ .
+        \end{enumerate}
+\end{theorem}
+
+\subsection*{Example application: coin tossing}
+Suppose we have a fair coin. 
+Repeatedly toss the coin, and let $S_n$ be the number of heads from the first $n$ tosses.
+Then the weak law of large numbers tells us that $\Pr(|S_n/n - 1/2| > \epsilon) \to 0$ as $n \to \infty$.
+But what can we say about this probability for some fixed $n$? 
+If we go back to the proof of the weak law that we gave in terms of Chebyshev's inequality, we find that it tells us that
+\[ \Pr(|S_n / n - 1/2| > \epsilon) < \frac{1}{4n\epsilon^2}. \]
+So for example, $\Pr(|S_n/n - 1/2| > 1/4) \leq \frac{4}{n}$.
+
+But we can apply Chernoff instead of Chebyshev; what do we get then?
+From Corollary~\ref{cor:twosides}, using $\E(S_n) = n/2$, 
+\[ \Pr(|S_n - n/2| > \delta(n/2)) \leq 2e^{-n\delta^2/6}. \]
+Taking $\delta=1/2$ we obtain $\Pr(|S_n/n-1/2| > 1/4) \leq 2e^{-n/24}$.
+This is a \emph{massive} improvement over the Chebyshev bound! 
+Let's try this now with a much smaller $\delta$: let $\delta = \sqrt{6\ln n/n}$. Then we obtain
+\[ \Pr(|S_n/n-1/2| > \tfrac12\sqrt{6 \ln n/n}) \leq 2e^{-\ln n} = 2\frac{1}{n}. \]
+If instead we take $\delta$ just twice as large, $\delta = 2\sqrt{6\ln n/n}$, 
+\[  \Pr(|S_n/n-1/2| > \sqrt{6 \ln n/n}) \leq 2e^{-4\ln n} = 2\frac{1}{n^4}. \]
+
+
+
+\end{document}

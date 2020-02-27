@@ -1,0 +1,106 @@
+\documentclass[11pt, notitlepage]{article}
+\usepackage[left=1in, right=1in, bottom=1in, top=1in]{geometry}
+\usepackage{amsmath, amssymb, amsthm}
+\newtheorem{prop}{Proposition}[section]
+\newtheorem{cor}[prop]{Corollary}
+\newtheorem{thm}[prop]{Theorem}
+\newtheorem{exer}[prop]{Exercise}
+\newtheorem{ex}[prop]{Example}
+
+\title{Introduction to LaTeX for 18.100C}
+\author{Todd Kemp, Joel Lewis and Susan Ruff}
+\begin{document}
+\maketitle
+
+\section{What is \LaTeX?}
+
+LaTeX is the ``industry standard'' typesetting system for writing mathematics.  For mathematical writing, LaTeX is more flexible than standard word processors (e.g., MSWord), produces \emph{vastly} better-looking results, and is easier to use (once you get used to it).
+
+Learning to effectively use LaTeX to produce attractive, professional-looking mathematical documents is one goal of the communication portion of this course.
+
+\section{How do I get LaTeX?}
+
+The programs and files necessary to produce LaTeXed documents can be downloaded from the Comprehensive TeX Archive Network at the TeX Users Group, 
+\begin{center}
+\underline{http://www.tug.org/} and \underline{http://www.tug.org/ctan}.
+\end{center}
+  For Windows users, a clear introduction is available at the Art of Problem Solving website, 
+\begin{center}
+\underline{http://www.artofproblemsolving.com/Wiki/index.php/LaTeX}.
+\end{center}
+
+\section{Then what?}
+
+In order to produce LaTeX documents, you first need to acquire the relevant software (see above) and then learn how to produce documents with it.  The LaTeX pages at the Art of Problem Solving (see the preceding link) provide a detailed explanation of how this works -- your first order of business after successfully downloading everything should be to read the Basics, Math, Layout, Symbols and Commands pages there.  They also have a collection of example documents for you to look at.
+
+\section{How to produce a basic document?}
+
+The following code will produce a document.
+
+\begin{verbatim}
+\documentclass[12pt, notitlepage]{article}
+\usepackage{amsmath, amssymb, amsthm}
+
+\begin{document}
+
+Hello world!  It is not true that $2 + 2 = \sin(5 \pi^2)$, but 
+\[
+\sum_{n = 1}^{10} n = \frac{10 \cdot 11}{2}
+\]
+is better.
+
+LaTeX     does   not  care      how    much  space  you    put    between
+words,  and     will   ignore    extra   space.  Ditto 
+for   
+single
+line
+breaks.
+
+
+
+(Two or more line breaks starts a new paragraph.)
+
+\noindent No indentation!  But \emph{emphasis}!  And see \cite[\S 7]{wiki} 
+for more on bibliographies.
+
+\begin{thebibliography}{9}
+\bibitem{wiki} ``LaTeX'' on Wikibooks, 
+     \texttt{http://en.wikibooks.org/wiki/LaTeX}.  
+     Accessed January 29, 2010.
+\end{thebibliography}
+\end{document}
+\end{verbatim}
+
+The resulting document will look like this:
+
+\bigskip
+
+Hello world!  It is not true that $2 + 2 = \sin(5 \pi^2)$, but 
+\[
+\sum_{n = 1}^{10} n = \frac{10 \cdot 11}{2}
+\]
+is better.
+
+LaTeX     does   not  care      how    much  space  you    put    between
+words,  and     will   ignore    extra   space.  Ditto 
+for   
+single
+line
+breaks.
+
+
+
+
+
+(Two or more line breaks starts a new paragraph.)
+
+\noindent No indentation!  But \emph{emphasis}!  And see \cite[\S 7]{wiki} 
+for more on bibliographies.
+
+\begin{thebibliography}{9}
+\bibitem{wiki} ``LaTeX'' on Wikibooks, 
+     \texttt{http://en.wikibooks.org/wiki/LaTeX}.  
+     Accessed January 29, 2010.
+\end{thebibliography}
+
+\end{document}

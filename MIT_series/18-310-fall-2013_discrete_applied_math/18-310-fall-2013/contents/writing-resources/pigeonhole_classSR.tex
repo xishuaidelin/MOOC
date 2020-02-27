@@ -1,0 +1,114 @@
+\documentclass[11pt]{article}
+\usepackage{amsmath, amssymb, amsthm}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}
+
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}
+\newtheorem{proposition}{Proposition}
+
+\theoremstyle{remark}
+\newtheorem*{claim}{Claim}
+
+\title{An Example of a Proof with Guiding Text}
+\author{Prof. Peter Shor}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+...The last example I want to present has 
+to do with permutations. A permutation of $n$ is an ordering of the numbers from 1 to $n$. 
+For example, a permutation of 7 is
+\[
+1 \ 4 \ 3 \ 7 \ 2 \ 6 \ 5 \, .
+\]
+
+We will prove the following theorem:
+\begin{theorem}
+ Every permutation of $n$  has either an
+increasing subsequence or a decreasing subsequence of length $\lceil \sqrt{n}
+\rceil$. 
+\end{theorem}
+
+Here $\lceil \cdot \rceil$ (``pronounced ceiling'') means to round up
+to the next integer.  For a permutation of 7, the theorem guarantees an increasing or a
+decreasing sequence of length at least $\lceil \sqrt{7} \rceil = 3$. The permutation 
+above has an increasing subsequence 1, 4, 7 and a decreasing subsequence 4, 3, 2. 
+
+\begin{proof}[Proof of Theorem 1]
+We will associate to every number in the permutation an
+ordered pair of two integers. The first integer associated with a number $k$
+will be the length of the longest increasing subsequence ending with $k$,
+and the second will be the length of the longest decreasing subsequence
+ending with $k$. Thus, for the subsequence above, the ordered pairs will be
+\[
+\begin{array}{ccccccc}
+1 & 4 & 3 & 7 & 2 & 6 & 5 \\
+\left(\begin{array}{c}1\\1\end{array}\right) &
+\left(\begin{array}{c}2\\1\end{array}\right) &
+\left(\begin{array}{c}2\\2\end{array}\right) &
+\left(\begin{array}{c}3\\1\end{array}\right) &
+\left(\begin{array}{c}2\\3\end{array}\right) &
+\left(\begin{array}{c}3\\2\end{array}\right) &
+\left(\begin{array}{c}3\\3\end{array}\right) 
+\end{array} \, .
+\]
+Here, the ordered pair associated with 2 is
+$(2,3)$ because the longest increasing subsequence ending with 2 is 1, 2, which has
+length 2, and the longest decreasing subsequence is 4, 3, 2, which has length 3.
+
+\begin{claim}All these ordered pairs are distinct.
+\end{claim}
+
+First, we use the pigeonhole principle to show how this claim implies our theorem, and
+then we will prove this claim. 
+
+The pigeons will be 
+the numbers 1, 2, $\ldots$, $n$, of the permutation, and the holes will be the 
+ordered pairs.  To find a bound on the number of holes, let $\ell_i$ be the length of the longest increasing subsequence 
+of our permutation, and let $\ell_d$ be the length of the longest decreasing
+subsequence. It is clear that all the ordered pairs are less than or equal
+to $(\ell_i,\ell_d)$, so the number of pairs is at most $\ell_i \ell_d$. 
+
+If we assume the claim that each pigeon fits into a different hole, then we have
+that the number of pigeons is at most the number of holes. There are $n$
+pigeons and at most $\ell_i \ell_d$ holes. This gives us
+\[
+n \leq \ell_i \ell_d,
+\]
+showing that either $\ell_i \geq \sqrt{n}$ or $\ell_d \geq
+\sqrt{n}$. Since $\ell_i$ and $\ell_d$ are integers, we can strengthen
+this to $\ell_i\geq \lceil \sqrt{n}\rceil$ or $\ell_d \geq \lceil
+\sqrt{n} \rceil$.  
+\end{proof}
+
+\begin{proof}[Proof of Claim] Suppose that we have two numbers in our permutation 
+$s$ and $t$, with $s$ coming before $t$, and let $(a,b)$ and $(c,d)$ be the
+ordered pairs associated with them.
+\[
+\begin{array}{ccccc}
+\ldots & s & \ldots & t & \ldots\\
+\ldots & 
+\left(\begin{array}{c}a\\b\end{array}\right) &
+\ldots & 
+\left(\begin{array}{c}c\\d\end{array}\right) &
+\ldots 
+\end{array}
+\]
+There is an increasing sequence of length $a$ that
+ends with $s$. 
+If $s < t$, we can add $t$ to this increasing sequence to obtain an
+increasing sequence of length $a+1$ that ends with $t$, showing that $c \geq
+a+1$. A similar argument shows that if $s > t$, then $d \geq b+1$. Thus,
+the two ordered pairs associated with $s$ and $t$ are distinct.  This proves
+the claim.
+\end{proof}
+
+It is a fairly easy exercise to find permutations of $n$ 
+that have no increasing or decreasing sequences longer than $\lceil \sqrt{n}
+\rceil$ for any $n$, showing that our theorem is the strongest possible result.
+
+\end{document} 
+

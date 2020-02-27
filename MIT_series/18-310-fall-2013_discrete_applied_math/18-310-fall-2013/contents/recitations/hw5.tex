@@ -1,0 +1,77 @@
+\documentclass[11pt]{article}
+\usepackage{graphicx}
+\usepackage{amsmath,amsthm,amsfonts}
+
+ \setlength{\textheight}{8.5in}
+\setlength{\evensidemargin}{0.0in}
+\setlength{\oddsidemargin}{0.0in}
+\setlength{\topmargin}{-0.5in}
+\setlength{\textwidth}{6.5in}
+
+\newtheorem*{thm}{Theorem}
+
+\newcommand{\mD}{\mathcal{D}}
+\newcommand{\mT}{\mathcal{T}}
+
+\newcommand{\handout}[6]{
+   \renewcommand{\thepage}{#1-\arabic{page}}
+   \noindent
+   \begin{center}
+      \vbox{
+    \hbox to \textwidth { #6 \hfill #2 }
+       \vspace{4mm}
+       \hbox to \textwidth { {\Large \hfill #5  \hfill} }
+       \vspace{2mm}
+       \hbox to \textwidth { { #3 \hfill #4} }
+      }
+   \hrulefill
+   \end{center}
+   \vspace*{4mm}
+}
+
+\begin{document}
+\handout{HW5}{Fall 2013}{Due Wednesday  October 9th at 6PM}{}{18.310 Homework 5}{}
+
+\paragraph{Instructions:} Remember to submit a separate PDF for each
+question via Stellar. Do not forget to include a list of your
+collaborators or to state that you worked on your own. This is a {\bf writing pset}, so both questions should be {\bf typeset}. 
+
+\begin{enumerate}
+
+\item Read the theorem and proof below. Starting with the second sentence of the proof, identify the familiar information and the important new information in each sentence. Then revise to improve the information order and connectivity, without revising the theorem, the first sentence of the proof, or the figure caption.
+
+\begin{thm}
+For each $n$, the set $\mT_n$ of plane trees with $n$ edges is the same size as the set $\mD_n$ of Dyke paths with $2n$ steps: 
+$$| \mT_n | = | \mD_n | \text{ for all }n.$$
+\end{thm}
+
+
+
+
+\begin{proof}
+We define a bijection $\Phi$ between plane trees and Dyck paths as follows: given any tree $T \in \mT_n$, perform a \emph{depth-first search} of the tree $T$ (as illustrated in Figure 1) and define $\Phi(T)$ as the sequence of up and down steps performed during the search. A Dyke path $D \in \mD_n$ is obtained from $T$ because $\Phi(T)$ has $n$ up steps and $n$ down steps (one step in each direction for each edge of $T$), starts and ends at level 0, and remains non-negative. Because $\Phi$ is a bijection between $\mT_n$ and $\mD_n$, we conclude 
+$|\mT_n|=|\mD_n|.$
+\end{proof}
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.8\textwidth]{fig-Tree-Dyck}
+\caption{A plane tree $T$ and the associated Dyck path $\Phi(T)$. The depth-first search of the tree is represented graphically by a tour around the tree (drawn in orange): first visit the leftmost subtree entirely, then the next subtree, etc.}\label{fig-Tree-Dyck}
+\label{fig:awesome_image}
+\end{figure}
+
+
+\item Read your solution to Pset 2 Problem 1 and look for places where changing the order of information could improve the connectivity.
+\begin{enumerate}
+\item Revise Pset 2 Problem 1, considering the comments you received, the information order and connectivity, and anything else you see that would benefit from revision. (In particular, if you received a low grade on this problem, you should consider major revisions.)
+\item Indicate at least one instance in which you revised information order to improve connectivity. If you didn't do so, then indicate at least one instance from the original version in which information is ordered in a way that creates connectivity.
+\end{enumerate}
+\end{enumerate}
+
+
+
+
+
+
+
+\end{document}
+
